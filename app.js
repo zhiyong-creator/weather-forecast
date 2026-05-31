@@ -1,9 +1,9 @@
 App({
   onLaunch () {
-    wx.cloud.init({
-      env: '',
-      traceUser: true,
-    })
+    // wx.cloud.init({
+    //   env: '',
+    //   traceUser: true,
+    // })
     wx.getSystemInfo({
       success: (res) => {
         this.globalData.systeminfo = res

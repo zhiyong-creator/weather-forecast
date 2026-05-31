@@ -409,27 +409,27 @@ Page({
       pos,
     })
   },
-  getBroadcast (callback) {
-    wx.cloud.callFunction({
-      name: 'getBroadcast',
-      data: {
-        hour: new Date().getHours(),
-      },
-    })
-    .then(res => {
-      let data = res.result.data
-      if (data) {
-        callback && callback(data[0].message)
-      }
-    })
-  },
-  reloadGetBroadcast () {
-    this.getBroadcast((message) => {
-      this.setData({
-        message,
-      })
-    })
-  },
+  // getBroadcast (callback) {
+  //   wx.cloud.callFunction({
+  //     name: 'getBroadcast',
+  //     data: {
+  //       hour: new Date().getHours(),
+  //     },
+  //   })
+  //   .then(res => {
+  //     let data = res.result.data
+  //     if (data) {
+  //       callback && callback(data[0].message)
+  //     }
+  //   })
+  // },
+  // reloadGetBroadcast () {
+  //   this.getBroadcast((message) => {
+  //     this.setData({
+  //       message,
+  //     })
+  //   })
+  // },
   reloadWeather () {
     if (this.data.located) {
       this.init({})
@@ -445,19 +445,19 @@ Page({
     if (!utils.isEmptyObject(this.data.shareInfo)) {
       return
     }
-    wx.cloud.callFunction({
-      name: 'getShareInfo',
-    })
-    .then(res => {
-      let shareInfo = res.result
-      if (shareInfo) {
-        if (!utils.isEmptyObject(shareInfo)) {
-          this.setData({
-            shareInfo,
-          })
-        }
-      }
-    })
+    // wx.cloud.callFunction({
+    //   name: 'getShareInfo',
+    // })
+    // .then(res => {
+    //   let shareInfo = res.result
+    //   if (shareInfo) {
+    //     if (!utils.isEmptyObject(shareInfo)) {
+    //       this.setData({
+    //         shareInfo,
+    //       })
+    //     }
+    //   }
+    // })
   },
   onLoad () {
     this.reloadPage()
@@ -467,7 +467,7 @@ Page({
     this.getCityDatas()
     this.reloadInitSetting()
     this.reloadWeather()
-    this.reloadGetBroadcast()
+    // this.reloadGetBroadcast()
   },
   checkUpdate (setting) {
     // 兼容低版本
