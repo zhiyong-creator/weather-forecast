@@ -14,6 +14,7 @@
   "permission": {
     "scope.userLocation": {
       "desc": "定位以获取当前位置天气信息"
-    }
+    },
+    "requiredPrivateInfos": ["getLocation"]
   }
 }

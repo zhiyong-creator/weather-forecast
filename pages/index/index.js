@@ -205,12 +205,20 @@ Page({
     })
     wx.getLocation({
       success: (res) => {
-        this.getWeather(``)
-        this.getHourly(``)
+        this.getWeather(`${res.longitude},${res.latitude}`)
+        this.getHourly(`${res.longitude},${res.latitude}`)
         callback && callback()
       },
       fail: (res) => {
-        this.fail(res)
+        // 定位失败时使用默认城市，避免页面空白
+        let defaultCity = 'Beijing'
+        this.getWeather(defaultCity)
+        this.getHourly(defaultCity)
+        this.setData({
+          searchCity: defaultCity,
+        })
+        wx.stopPullDownRefresh()
+        callback && callback()
       }
     })
   },
@@ -222,61 +230,80 @@ Page({
         key,
       },
       success: (res) => {
-        if (res.statusCode === 200) {
-          let data = res.data.HeWeather6[0]
-          if (data.status === 'ok') {
-            this.clearInput()
-            this.success(data, location)
-            if (data.now.cond_txt.indexOf('晴') >= 0) {
-              this.setData({
-                bcgImg: this.data.bcgImgList[0].src,
-                bcgColor: this.data.bcgImgList[0].topColor,
-              })
-              this.setNavigationBarColor()
-            } else if (data.now.cond_txt.indexOf('雨') >= 0) {
-              this.setData({
-                bcgImg: this.data.bcgImgList[1].src,
-                bcgColor: this.data.bcgImgList[1].topColor,
-              })
-              this.setNavigationBarColor()
-            } else if (data.now.cond_txt.indexOf('雪') >= 0) {
-              this.setData({
-                bcgImg: this.data.bcgImgList[2].src,
-                bcgColor: this.data.bcgImgList[2].topColor,
-              })
-              this.setNavigationBarColor()
-            } else if (data.now.cond_txt.indexOf('云') >= 0) {
-              this.setData({
-                bcgImg: this.data.bcgImgList[3].src,
-                bcgColor: this.data.bcgImgList[3].topColor,
-              })
-              this.setNavigationBarColor()
-            } else if (data.now.cond_txt.indexOf('雾') >= 0) {
-              this.setData({
-                bcgImg: this.data.bcgImgList[4].src,
-                bcgColor: this.data.bcgImgList[4].topColor,
-              })
-              this.setNavigationBarColor()
-            } else if (data.now.cond_txt.indexOf('阴') >= 0) {
-              this.setData({
-                bcgImg: this.data.bcgImgList[5].src,
-                bcgColor: this.data.bcgImgList[5].topColor,
-              })
-              this.setNavigationBarColor()
-            } else {
-              this.setData({
-                bcgImg: this.data.bcgImgList[6].src,
-                bcgColor: this.data.bcgImgList[6].topColor,
-              })
-              this.setNavigationBarColor()
-            }
-
-          } else {
-            wx.showToast({
-              title: '查询失败',
-              icon: 'none',
-            })
+        if (res.statusCode === 200 && res.data.code === '200') {
+          let now = res.data.now
+          // 将 v7 字段名映射为模板使用的旧字段名
+          let data = {
+            basic: {
+              location: res.data.fxLink ? (res.data.fxLink.match(/weather\/(.+?)-\d+/) || [])[1] || location : location,
+            },
+            now: {
+              tmp: now.temp,
+              fl: now.feelsLike,
+              hum: now.humidity,
+              pcpn: now.precip,
+              wind_dir: now.windDir,
+              wind_deg: now.wind360,
+              wind_sc: now.windScale,
+              wind_spd: now.windSpeed,
+              vis: now.vis,
+              pres: now.pressure,
+              cloud: now.cloud,
+              cond_txt: now.text,
+              cond_code: now.icon,
+            },
           }
+          this.clearInput()
+          this.success(data, location)
+          if (data.now.cond_txt.indexOf('晴') >= 0) {
+            this.setData({
+              bcgImg: this.data.bcgImgList[0].src,
+              bcgColor: this.data.bcgImgList[0].topColor,
+            })
+            this.setNavigationBarColor()
+          } else if (data.now.cond_txt.indexOf('雨') >= 0) {
+            this.setData({
+              bcgImg: this.data.bcgImgList[1].src,
+              bcgColor: this.data.bcgImgList[1].topColor,
+            })
+            this.setNavigationBarColor()
+          } else if (data.now.cond_txt.indexOf('雪') >= 0) {
+            this.setData({
+              bcgImg: this.data.bcgImgList[2].src,
+              bcgColor: this.data.bcgImgList[2].topColor,
+            })
+            this.setNavigationBarColor()
+          } else if (data.now.cond_txt.indexOf('云') >= 0) {
+            this.setData({
+              bcgImg: this.data.bcgImgList[3].src,
+              bcgColor: this.data.bcgImgList[3].topColor,
+            })
+            this.setNavigationBarColor()
+          } else if (data.now.cond_txt.indexOf('雾') >= 0) {
+            this.setData({
+              bcgImg: this.data.bcgImgList[4].src,
+              bcgColor: this.data.bcgImgList[4].topColor,
+            })
+            this.setNavigationBarColor()
+          } else if (data.now.cond_txt.indexOf('阴') >= 0) {
+            this.setData({
+              bcgImg: this.data.bcgImgList[5].src,
+              bcgColor: this.data.bcgImgList[5].topColor,
+            })
+            this.setNavigationBarColor()
+          } else {
+            this.setData({
+              bcgImg: this.data.bcgImgList[6].src,
+              bcgColor: this.data.bcgImgList[6].topColor,
+            })
+            this.setNavigationBarColor()
+          }
+
+        } else {
+          wx.showToast({
+            title: '查询失败',
+            icon: 'none',
+          })
         }
       },
       fail: () => {
@@ -295,13 +322,20 @@ Page({
         key,
       },
       success: (res) => {
-        if (res.statusCode === 200) {
-          let data = res.data.HeWeather6[0]
-          if (data.status === 'ok') {
-            this.setData({
-              hourlyDatas: data.hourly || []
-            })
-          }
+        if (res.statusCode === 200 && res.data.code === '200') {
+          let hourlyList = res.data.hourly || []
+          // 将 v7 字段名映射为旧字段名
+          this.setData({
+            hourlyDatas: hourlyList.map(item => ({
+              temp: item.temp,
+              cond_txt: item.text,
+              icon: item.icon,
+              wind_dir: item.windDir,
+              wind_sc: item.windScale,
+              hum: item.humidity,
+              time: item.fxTime,
+            }))
+          })
         }
       },
       fail: () => {

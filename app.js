@@ -19,8 +19,8 @@ App({
     key: '9cad8bce59904f4699ac9f275db3e091',
     weatherIconUrl: '',
     requestUrl: {
-      weather: 'https://free-api.heweather.net/s6/weather/now',
-      hourly: 'https://free-api.heweather.net/s6/weather/hourly',
+      weather: 'https://pv6apvmwqk.re.qweatherapi.com/v7/weather/now',
+      hourly: 'https://pv6apvmwqk.re.qweatherapi.com/v7/weather/24h',
     },
   },
 })

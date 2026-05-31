@@ -10,7 +10,8 @@
             "ignore": [],
             "disablePlugins": [],
             "outputPath": ""
-        }
+        },
+        "packNpmRelationList": []
     },
     "cloudfunctionRoot": "cloudfunction/",
     "compileType": "miniprogram",
