@@ -1,10 +1,8 @@
-let utils = require('../../utils/utils')
 Component({
   data: {
     windowWidth: 0,
     windowHeight: 0,
     arr: [],
-    // 动画最长持续时间
     duration: 5000,
     animations: [],
     lefts: [],
@@ -17,33 +15,24 @@ Component({
       value: true
     },
   },
-  ready () {
-    let systeminfo = getApp().globalData.systeminfo
-    if (utils.isEmptyObject(systeminfo)) {
-      wx.getSystemInfo({
-        success: (res) => {
-          this.setData({
-            windowWidth: res.windowWidth || res.screenWidth,
-            windowHeight: res.windowHeight || res.screenHeight,
-          })
-        },
-      })
-    } else {
+  ready() {
+    try {
+      let info = wx.getWindowInfo()
       this.setData({
-        windowWidth: systeminfo.windowWidth || systeminfo.screenWidth,
-        windowHeight: systeminfo.windowHeight || systeminfo.screenHeight,
+        windowWidth: info.windowWidth || info.screenWidth,
+        windowHeight: info.windowHeight || info.screenHeight,
       })
+    } catch (e) {
+      this.setData({ windowWidth: 375, windowHeight: 667 })
     }
     let num = parseInt(Math.random() * 100) + 10
     let arr = Array.apply(null, { length: num }).map(function (value, index) {
-      return index + 1;
+      return index + 1
     })
-    this.setData({
-      arr,
-    })
+    this.setData({ arr: arr })
   },
   methods: {
-    dance (callback) {
+    dance(callback) {
       let windowWidth = this.data.windowWidth
       let windowHeight = this.data.windowHeight
       let duration = this.data.duration
@@ -51,7 +40,6 @@ Component({
       let lefts = []
       let tops = []
       let widths = []
-      let obj = {}
       for (let i = 0; i < this.data.arr.length; i++) {
         lefts.push(Math.random() * windowWidth)
         tops.push(-140)
@@ -62,15 +50,9 @@ Component({
         animation.top(windowHeight).left(Math.random() * windowWidth).rotate(Math.random() * 960).step()
         animations.push(animation.export())
       }
-      this.setData({
-        lefts,
-        tops,
-        widths,
-      })
+      this.setData({ lefts: lefts, tops: tops, widths: widths })
       let timer = setTimeout(() => {
-        this.setData({
-          animations,
-        })
+        this.setData({ animations: animations })
         clearTimeout(timer)
       }, 200)
       let end = setTimeout(() => {

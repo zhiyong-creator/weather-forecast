@@ -1,18 +1,15 @@
 App({
   onLaunch() {
-    // wx.cloud.init({
-    //   env: '',
-    //   traceUser: true,
-    // })
-    wx.getSystemInfo({
-      success: (res) => {
-        this.globalData.systeminfo = res
-        this.globalData.isIPhoneX = /iphonex/gi.test(res.model.replace(/\s+/, ''))
-      },
-    })
+    try {
+      let windowInfo = wx.getWindowInfo()
+      let deviceInfo = wx.getDeviceInfo()
+      this.globalData.systeminfo = Object.assign({}, windowInfo, deviceInfo)
+      this.globalData.isIPhoneX = /iphone\s?x/gi.test(deviceInfo.model.replace(/\s+/g, ''))
+    } catch (e) {
+      this.globalData.systeminfo = {}
+    }
   },
   globalData: {
-    // 是否保持常亮，离开小程序失效
     keepscreenon: false,
     systeminfo: {},
     isIPhoneX: false,
@@ -21,6 +18,8 @@ App({
     requestUrl: {
       weather: 'https://pv6apvmwqk.re.qweatherapi.com/v7/weather/now',
       hourly: 'https://pv6apvmwqk.re.qweatherapi.com/v7/weather/24h',
+      daily: 'https://pv6apvmwqk.re.qweatherapi.com/v7/weather/3d',
+      geo: 'https://pv6apvmwqk.re.qweatherapi.com/geo/v2/city/lookup',
     },
   },
 })

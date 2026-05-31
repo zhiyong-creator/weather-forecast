@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/citychoose/citychoose",
     "pages/about/about",
     "pages/setting/setting",
     "pages/systeminfo/systeminfo"
@@ -11,10 +12,10 @@
     "navigationBarTitleText": "Weather Widget",
     "navigationBarTextStyle": "white"
   },
+  "requiredPrivateInfos": ["getLocation"],
   "permission": {
     "scope.userLocation": {
       "desc": "定位以获取当前位置天气信息"
-    },
-    "requiredPrivateInfos": ["getLocation"]
+    }
   }
 }

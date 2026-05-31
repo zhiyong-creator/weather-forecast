@@ -23,53 +23,40 @@
   </view>
   <view class='content' wx:if='{{!bcgImgAreaShow}}' style='margin-top: {{setting.hiddenSearch ? 20 : 60}}px'>
     <view class='avatarInfo' catchtap='showBcgImgArea'>
-      <open-data class='avatar' type='userAvatarUrl'></open-data>
-      <open-data class='name' type='userNickName'></open-data>
-      <!-- <image class='downArrow' src='/img/down.png'></image> -->
+      <image class='avatar' src='/img/weather.png'></image>
+      <view class='name' wx:if='{{weatherNow.updateTimeFormat}}'>更新于 {{weatherNow.updateTimeFormat}}</view>
     </view>
     <view class='info'>
       <view class='city'>
         <view class='name' bindtap='toCitychoose'>
           <image wx:if='{{located}}' class='icon' src='/img/location_s_w.png'></image>
-          <view class='val'>{{cityDatas.basic.location || '定位中'}}</view>
-          <!-- <image class='down' src='/img/down.png'></image> -->
+          <view class='val'>{{weatherNow.location || '定位中'}}</view>
         </view>
       </view>
       <view class='message'>{{message}}</view>
-      <view class='temp num' decode='true'>{{cityDatas.now.tmp || '-'}}<text style='font-size:50rpx;position:relative;top:-20px;'>℃</text></view>
-      <view class='weather'>{{cityDatas.now.cond_txt || '--'}}</view>
+      <view class='temp num' decode='true'>{{weatherNow.temp || '-'}}<text style='font-size:50rpx;position:relative;top:-20px;'>℃</text></view>
+      <view class='weather'>{{weatherNow.text || '--'}}</view>
       <view class='pm'>
-        <text>能见度 {{cityDatas.now.vis}}</text>
+        <text>能见度 {{weatherNow.vis}}</text>
       </view>
     </view>
-    <view class='guide' wx:if='{{cityDatas.daily_forecast}}'>
-      <view class='title'>7 天预报</view>
+    <view class='guide' wx:if='{{dailyForecast.length}}'>
+      <view class='title'>3 天预报</view>
       <view class='guides'>
-        <view class='item' wx:for='{{cityDatas.daily_forecast}}' wx:key='{{index}}'>
-          <view class='date i'>{{item.date}}</view>
-          <view class='temperature i'>{{item.tmp_max}}~{{item.tmp_min}}℃</view>
+        <view class='item' wx:for='{{dailyForecast}}' wx:key='{{index}}'>
+          <view class='date i'>{{item.fxDate}}</view>
+          <view class='temperature i'>{{item.tempMax}}~{{item.tempMin}}℃</view>
           <view class='weather i'>
-            <text>{{item.cond_txt_d}}</text>
-            <image mode='widthFix' src='{{weatherIconUrl}}{{item.cond_code_d}}.png'></image>
+            <text>{{item.textDay}}</text>
           </view>
-          <view class='wind i'>{{item.wind_dir}}{{item.wind_sc}}级</view>
+          <view class='wind i'>{{item.windDirDay}} {{item.windScaleDay}}级</view>
         </view>
       </view>
     </view>
     <view class='details'>
       <view class='detail' wx:for='{{detailsDic.key}}' wx:key='{{index}}'>
         <view>{{detailsDic.val[item]}}</view>
-        <view>{{cityDatas.now[item]}}</view>
-      </view>
-    </view>
-    <!-- <ad unit-id="adunit-785cc3f710cc3d4c"></ad> -->
-    <view class='livingIndex' wx:if='{{!setting.hiddenIndex}}'>
-      <view class='item' wx:for='{{cityDatas.lifestyle}}' wx:key='{{index}}'>
-        <image class='icon' src='/img/lifestyle_{{item.type}}.png'></image>
-        <view class='right'>
-          <view class='key'>{{lifestyles[item.type]}} {{item.brf}}</view>
-          <view class='value'>{{item.txt}}</view>
-        </view>
+        <view>{{weatherNow[item]}}</view>
       </view>
     </view>
     <view class='footer'>developed by jack.zhang</view>
@@ -78,5 +65,20 @@
     <image src='/img/unlock.png'></image>
     <button open-type='openSetting'></button>
   </view>
- 
+</view>
+
+<view class='menus' wx:if='{{!bcgImgAreaShow}}'>
+  <view class='menu' animation='{{animationOne}}' catchtap='menuToCitychoose'>
+    <image src='/img/city.png'></image>
+  </view>
+  <view class='menu' animation='{{animationTwo}}' catchtap='menuToSetting'>
+    <image src='/img/setting.png'></image>
+  </view>
+  <view class='share' animation='{{animationFour}}'>
+    <image src='/img/share_circle.png'></image>
+    <button open-type='share'></button>
+  </view>
+  <view class='menu main' animation='{{animationMain}}' catchtap='menuMain' bindtouchmove='menuMainMove' style='left:{{pos.left}}px;top:{{pos.top}}px;'>
+    <image src='/img/menu.png'></image>
+  </view>
 </view>

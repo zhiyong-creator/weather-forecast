@@ -1,6 +1,5 @@
-let formatDate = (nDate, date) => {
+let formatDate = function (nDate, date) {
   if (isNaN(nDate.getTime())) {
-    // 不是时间格式
     return '--'
   }
   let o = {
@@ -9,7 +8,6 @@ let formatDate = (nDate, date) => {
     'h+': nDate.getHours(),
     'm+': nDate.getMinutes(),
     's+': nDate.getSeconds(),
-    // 季度
     'q+': Math.floor((nDate.getMonth() + 3) / 3),
     'S': nDate.getMilliseconds()
   }
@@ -24,31 +22,14 @@ let formatDate = (nDate, date) => {
   return date
 }
 
-let isEmptyObject = (obj) => {
+let isEmptyObject = function (obj) {
   for (let i in obj) {
     return false
   }
   return true
 }
 
-// let themeSetting = () => {
-//   let bcgColor = '#40a7e7'
-//   let hour = new Date().getHours()
-//   if (hour >= 6 && hour <= 17) {
-//     bcgColor = '#40a7e7'
-//   } else {
-//     bcgColor = '#384148'
-//   }
-//   wx.setNavigationBarColor({
-//     frontColor: '#ffffff',
-//     backgroundColor: bcgColor,
-//   })
-//   return bcgColor
-// }
-
-// 比较版本号：left > right 1, left < right -1, left == right 0
-// 用途：旧版本不执行写入、删除 日历操作
-let cmpVersion = (left, right) => {
+let cmpVersion = function (left, right) {
   if (typeof left + typeof right !== 'stringstring') {
     return false
   }
@@ -67,8 +48,7 @@ let cmpVersion = (left, right) => {
 }
 
 module.exports = {
-  formatDate,
-  isEmptyObject,
-  // themeSetting,
-  cmpVersion,
+  formatDate: formatDate,
+  isEmptyObject: isEmptyObject,
+  cmpVersion: cmpVersion,
 }
