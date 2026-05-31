@@ -7,7 +7,6 @@ WeatherWidget 简易天气查询小程序 —— 项目功能介绍
 ### 和风天气 API 配置
 - **API Key**: `9cad8bce59904f4699ac9f275db3e091`
 - **API Host (专属域名)**: `pv6apvmwqk.re.qweatherapi.com`
-- **开发者 ID**: `Q175780772`
 - **API 版本**: v7
 - **接口地址**:
   - 实时天气: `https://pv6apvmwqk.re.qweatherapi.com/v7/weather/now`

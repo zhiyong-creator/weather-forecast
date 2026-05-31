@@ -74,7 +74,7 @@
   <view class='menu' animation='{{animationTwo}}' catchtap='menuToSetting'>
     <image src='/img/setting.png'></image>
   </view>
-  <view class='share' animation='{{animationFour}}'>
+  <view class='share {{hasPopped ? "share-active" : ""}}' animation='{{animationFour}}'>
     <image src='/img/share_circle.png'></image>
     <button open-type='share'></button>
   </view>
