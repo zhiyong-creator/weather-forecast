@@ -216,7 +216,7 @@ Page({
   },
   getWeather (location) {
     wx.request({
-      url: ``,
+      url: `${globalData.requestUrl.weather}`,
       data: {
         location,
         key,

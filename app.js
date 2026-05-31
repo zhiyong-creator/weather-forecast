@@ -1,5 +1,5 @@
 App({
-  onLaunch () {
+  onLaunch() {
     // wx.cloud.init({
     //   env: '',
     //   traceUser: true,
@@ -13,14 +13,14 @@ App({
   },
   globalData: {
     // 是否保持常亮，离开小程序失效
-    keepscreenon:false,
+    keepscreenon: false,
     systeminfo: {},
     isIPhoneX: false,
-    key: '',
+    key: '9cad8bce59904f4699ac9f275db3e091',
     weatherIconUrl: '',
     requestUrl: {
-      weather: '',
-      hourly: '',
+      weather: 'https://free-api.heweather.net/s6/weather/now',
+      hourly: 'https://free-api.heweather.net/s6/weather/hourly',
     },
   },
 })
