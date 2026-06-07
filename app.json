@@ -2,7 +2,6 @@
   "pages": [
     "pages/index/index",
     "pages/citychoose/citychoose",
-    "pages/about/about",
     "pages/setting/setting",
     "pages/systeminfo/systeminfo"
   ],

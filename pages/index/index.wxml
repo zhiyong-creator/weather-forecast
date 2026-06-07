@@ -59,7 +59,6 @@
         <view>{{weatherNow[item]}}</view>
       </view>
     </view>
-    <view class='footer'>developed by jack.zhang</view>
   </view>
   <view wx:if='{{openSettingButtonShow}}' class='openSettingButton'>
     <image src='/img/unlock.png'></image>

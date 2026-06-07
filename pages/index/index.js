@@ -382,10 +382,6 @@ Page({
     this.menuMain()
     wx.navigateTo({ url: '/pages/setting/setting' })
   },
-  menuToAbout() {
-    this.menuMain()
-    wx.navigateTo({ url: '/pages/about/about' })
-  },
   popp() {
     let animationMain = wx.createAnimation({ duration: 200, timingFunction: 'ease-out' })
     let animationOne = wx.createAnimation({ duration: 200, timingFunction: 'ease-out' })
