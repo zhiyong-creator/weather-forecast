@@ -11,6 +11,7 @@ Page({
     message: '',
     weatherNow: {},
     hourlyDatas: [],
+    lifeIndices: [],
     dailyForecast: [],
     weatherIconUrl: globalData.weatherIconUrl,
     detailsDic: {
@@ -115,12 +116,14 @@ Page({
       api.getWeatherNow(location).catch(function () { return null }),
       api.getWeather24h(location).catch(function () { return null }),
       api.getWeather3d(location).catch(function () { return null }),
+      api.getIndices(location).catch(function () { return null }),
     ]).then((results) => {
       wx.hideLoading()
       wx.stopPullDownRefresh()
       let nowData = results[0]
       let hourlyData = results[1]
       let dailyData = results[2]
+      let indicesData = results[3]
       let updateData = {}
 
       if (nowData) {
@@ -142,6 +145,10 @@ Page({
 
       if (dailyData) {
         updateData.dailyForecast = weatherService.parseDailyForecast(dailyData.daily)
+      }
+
+      if (indicesData) {
+        updateData.lifeIndices = weatherService.parseIndices(indicesData.daily)
       }
 
       this.setData(updateData)

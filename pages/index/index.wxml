@@ -64,6 +64,16 @@
         </view>
       </view>
     </view> 
+    <view class='livingIndex' wx:if='{{lifeIndices.length}}'>
+      <view class='livingIndextitle'>生活指数</view>
+      <scroll-view class='indexes' scroll-x enhanced show-scrollbar='{{false}}'>
+        <view class='item' wx:for='{{lifeIndices}}' wx:key='{{index}}'>
+          <view class='name'>{{item.name}}</view>
+          <view class='category'>{{item.category}}</view>
+          <view class='text'>{{item.text}}</view>
+        </view>
+      </scroll-view>
+    </view>
     <view class='title show-title'>实时天气</view>
     <view class='details'>
       <view class='detail' wx:for='{{detailsDic.key}}' wx:key='{{index}}'>

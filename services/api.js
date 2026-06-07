@@ -35,9 +35,14 @@ function lookupCity(cityName) {
   return request(globalData.requestUrl.geo, { location: cityName })
 }
 
+function getIndices(location) {
+  return request(globalData.requestUrl.indices, { location, type: '1,2,3,5,6,8,9' })
+}
+
 module.exports = {
   getWeatherNow,
   getWeather24h,
   getWeather3d,
   lookupCity,
+  getIndices,
 }

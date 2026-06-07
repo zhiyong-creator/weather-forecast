@@ -84,9 +84,22 @@ function parseDailyForecast(dailyList) {
   })
 }
 
+function parseIndices(indicesList) {
+  return (indicesList || []).map(function (item) {
+    return {
+      name: item.name,
+      category: item.category,
+      level: item.level,
+      text: item.text,
+      type: item.type,
+    }
+  })
+}
+
 module.exports = {
   parseNowWeather,
   parseHourlyWeather,
   parseDailyForecast,
+  parseIndices,
   getBackgroundByWeather,
 }

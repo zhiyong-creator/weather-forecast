@@ -274,6 +274,50 @@ page {
 .hourly .hour .weather {
   font-size: 22rpx;
 }
+.livingIndex {
+  margin-bottom: 20rpx;
+}
+.livingIndex .indexes {
+  display: flex;
+  flex-wrap: nowrap;
+  background: rgba(0, 0, 0, .6);
+  padding: 20rpx;
+  white-space: nowrap;
+}
+.livingIndex .item {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 200rpx;
+  flex-shrink: 0;
+  padding: 16rpx;
+  margin-right: 16rpx;
+  background: rgba(255, 255, 255, .1);
+  border-radius: 12rpx;
+  white-space: normal;
+  word-break: break-all;
+}
+.livingIndex .item:last-child {
+  margin-right: 0;
+}
+.livingIndex .item .name {
+  font-size: 26rpx;
+  font-weight: 500;
+  padding-bottom: 8rpx;
+}
+.livingIndex .item .category {
+  font-size: 32rpx;
+  font-weight: 600;
+  padding-bottom: 8rpx;
+  color: #ffd700;
+}
+.livingIndex .item .text {
+  font-size: 22rpx;
+  line-height: 1.5;
+  text-align: center;
+  color: rgba(255, 255, 255, .8);
+}
 .details {
   display: flex;
   align-items: center;
