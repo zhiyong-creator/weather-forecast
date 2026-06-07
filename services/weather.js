@@ -51,6 +51,10 @@ function parseNowWeather(nowData, fxLink, location) {
 
 function parseHourlyWeather(hourlyList) {
   return (hourlyList || []).map(function (item) {
+    var time = ''
+    if (item.fxTime) {
+      time = item.fxTime.slice(11, 16)
+    }
     return {
       temp: item.temp,
       text: item.text,
@@ -59,6 +63,7 @@ function parseHourlyWeather(hourlyList) {
       windScale: item.windScale,
       humidity: item.humidity,
       fxTime: item.fxTime,
+      time: time,
     }
   })
 }

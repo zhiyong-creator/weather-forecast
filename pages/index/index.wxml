@@ -27,6 +27,7 @@
       <view class='name' wx:if='{{weatherNow.updateTimeFormat}}'>更新于 {{weatherNow.updateTimeFormat}}</view>
     </view>
     
+    
     <view class='info'>
       <view class='city'>
         
@@ -38,6 +39,17 @@
       <view class='message'>{{message}}</view>
       <view class='temp num' decode='true'>{{weatherNow.temp || '-'}}<text style='font-size:50rpx;position:relative;top:-20px;'>℃</text></view>
       <view class='weather'>{{weatherNow.text || '--'}}</view>
+    </view>
+    <view class='hourly' wx:if='{{hourlyDatas.length}}'>
+      <view class='title'>逐时预报</view>
+      <view class='hours'>
+        <view class='hour' wx:for='{{hourlyDatas}}' wx:key='{{index}}'>
+          <view class='time'>{{item.time}}</view>
+          <view class='temp'>{{item.temp}}℃</view>
+          <view class='weather'>{{item.text}}</view>
+          <view class='wind'>{{item.windDir}} {{item.windScale}}级</view>
+        </view>
+      </view>
     </view>
     <view class='guide' wx:if='{{dailyForecast.length}}'>
       <view class='title'>3 天预报</view>

@@ -8,7 +8,7 @@
   "window": {
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#40a7e7",
-    "navigationBarTitleText": "Weather Widget",
+    "navigationBarTitleText": "Weather Forecast",
     "navigationBarTextStyle": "white"
   },
   "requiredPrivateInfos": [
