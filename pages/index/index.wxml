@@ -51,25 +51,33 @@
         </view>
       </view>
     </view>
-    <view class='guide' wx:if='{{dailyForecast.length}}'>
+    <view class='dailyForecast' wx:if='{{dailyForecast.length}}'>
       <view class='title'>3 天预报</view>
-      <view class='guides'>
+      <view class='forecasts'>
         <view class='item' wx:for='{{dailyForecast}}' wx:key='{{index}}'>
-          <view class='date i'>{{item.fxDate}}</view>
-          <view class='temperature i'>{{item.tempMax}}~{{item.tempMin}}℃</view>
-          <view class='weather i'>
-            <text>{{item.textDay}}</text>
+          <view class='day-label'>{{item.dayLabel}}</view>
+          <view class='date-text'>{{item.fxDate.slice(5)}}</view>
+          <view class='weather-icon icon-{{item.iconDay}}'>{{item.textDay}}</view>
+          <view class='temp-group'>
+            <text class='temp-max'>{{item.tempMax}}°</text>
+            <view class='temp-bar'>
+              <view class='temp-bar-fill' style='width:60%'></view>
+            </view>
+            <text class='temp-min'>{{item.tempMin}}°</text>
           </view>
-          <view class='wind i'>{{item.windDirDay}} {{item.windScaleDay}}级</view>
+          <view class='wind-info'>{{item.windDirDay}} {{item.windScaleDay}}级</view>
         </view>
       </view>
-    </view> 
+    </view>
     <view class='livingIndex' wx:if='{{lifeIndices.length}}'>
       <view class='livingIndextitle'>生活指数</view>
       <scroll-view class='indexes' scroll-x enhanced show-scrollbar='{{false}}'>
         <view class='item' wx:for='{{lifeIndices}}' wx:key='{{index}}'>
-          <view class='name'>{{item.name}}</view>
-          <view class='category'>{{item.category}}</view>
+          <image class='icon' src='{{item.icon}}' mode='aspectFill' wx:if='{{item.icon}}'></image>
+          <view class='info'>
+            <view class='name'>{{item.name}}</view>
+            <view class='category'>{{item.category}}</view>
+          </view>
           <view class='text'>{{item.text}}</view>
         </view>
       </scroll-view>

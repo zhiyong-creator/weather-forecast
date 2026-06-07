@@ -68,10 +68,23 @@ function parseHourlyWeather(hourlyList) {
   })
 }
 
+function getDayLabel(dateStr) {
+  if (!dateStr) return ''
+  var now = new Date()
+  var today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  var date = new Date(dateStr)
+  var diff = Math.round((date - today) / (1000 * 60 * 60 * 24))
+  if (diff === 0) return '今天'
+  if (diff === 1) return '明天'
+  if (diff === 2) return '后天'
+  return dateStr.slice(5)
+}
+
 function parseDailyForecast(dailyList) {
   return (dailyList || []).map(function (item) {
     return {
       fxDate: item.fxDate,
+      dayLabel: getDayLabel(item.fxDate),
       tempMax: item.tempMax,
       tempMin: item.tempMin,
       textDay: item.textDay,
@@ -84,14 +97,26 @@ function parseDailyForecast(dailyList) {
   })
 }
 
+var lifestyleIconMap = {
+  '1': 'sport',
+  '2': 'cw',
+  '3': 'drsg',
+  '5': 'uv',
+  '6': 'trav',
+  '8': 'comf',
+  '9': 'flu',
+}
+
 function parseIndices(indicesList) {
   return (indicesList || []).map(function (item) {
+    var iconName = lifestyleIconMap[item.type] || ''
     return {
       name: item.name,
       category: item.category,
       level: item.level,
       text: item.text,
       type: item.type,
+      icon: iconName ? '/img/lifestyle_' + iconName + '.png' : '',
     }
   })
 }
