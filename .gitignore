@@ -1,1 +1,3 @@
 cloudfunction/*/node_modules/
+# 忽略整个 .idea 目录
+.idea/
