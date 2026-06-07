@@ -1,111 +1,133 @@
-WeatherWidget 简易天气查询小程序 —— 项目功能介绍
-一、项目概述
-# WeatherWidget 简易天气查询小程序
+# WeatherWidget - 天气预报小程序
 
-## 项目配置信息 (新会话必读)
+## 项目配置信息（新会话必读）
 
 ### 和风天气 API 配置
 - **API Key**: `9cad8bce59904f4699ac9f275db3e091`
 - **API Host (专属域名)**: `pv6apvmwqk.re.qweatherapi.com`
 - **API 版本**: v7
 - **接口地址**:
-  - 实时天气: `https://pv6apvmwqk.re.qweatherapi.com/v7/weather/now`
-  - 24小时预报: `https://pv6apvmwqk.re.qweatherapi.com/v7/weather/24h`
-  - 3天预报: `https://pv6apvmwqk.re.qweatherapi.com/v7/weather/3d`
-  - 城市查询(GeoAPI): `https://pv6apvmwqk.re.qweatherapi.com/geo/v2/city/lookup`
-- **定位**: 使用 LocationID (如北京=`101010100`)，不直接使用城市名
+  - 实时天气: `/v7/weather/now`
+  - 24小时预报: `/v7/weather/24h`
+  - 3天预报: `/v7/weather/3d`
+  - 生活指数: `/v7/indices/1d` (type: 1,2,3,5,6,8,9)
+  - 城市查询: `/geo/v2/city/lookup`
+- **定位**: 使用 LocationID 或经纬度坐标
 - **微信开发者工具**: 需勾选「不校验合法域名」
+- **数据类型**: v7 格式 (temp/feelsLike/textDay/iconDay/windDirDay 等)
 
-### 项目架构 (重构后)
+## 项目架构
+
 ```
-app.js                        # 全局配置 + 设备信息 (getWindowInfo/getDeviceInfo)
-services/api.js               # API 服务层，封装所有和风天气 HTTP 请求 (返回 Promise)
-services/weather.js           # 数据解析 + 背景图匹配 (查找表)
-utils/events.js               # 轻量事件总线 (替代 getCurrentPages hack)
-utils/utils.js                # 工具函数 (formatDate, isEmptyObject, cmpVersion)
-data/staticData.js            # 城市列表 + 热门城市 (hotCities)
-pages/index/index.js          # 首页 (~290行)，使用 loadWeather() 统一加载
-pages/index/index.wxml        # 首页模板，字段名为 v7 格式 (temp/feelsLike/text/windDir)
-pages/citychoose/citychoose.js # 城市选择，通过 events.emit('weatherRefresh') 通知首页
-pages/setting/setting.js      # 设置页，通过 events.emit('settingChanged') 通知首页
-pages/systeminfo/systeminfo.js # 系统信息页
-components/heartbeat/         # 爱心动画组件 (搜索520/521触发)
+WeatherWidget/
+├── app.js                  # 全局入口 + 设备信息 + API Key + 请求地址
+├── app.json                # 页面路由 + tabBar 配置
+├── app.wxss                # 全局样式
+├── project.config.json     # 项目配置
+│
+├── pages/
+│   ├── index/              # 首页 - 天气主页面
+│   ├── citychoose/         # 城市选择页
+│   ├── setting/            # 设置页
+│   └── systeminfo/         # 系统信息页
+│
+├── services/
+│   ├── api.js              # API 层：和风天气 HTTP 请求 (Promise)
+│   └── weather.js          # 数据解析层 + 背景图匹配 + 生活指数图标映射
+│
+├── utils/
+│   ├── utils.js            # 工具函数 (formatDate, isEmptyObject, cmpVersion)
+│   └── events.js           # 轻量事件总线 (on/off/emit)
+│
+├── components/
+│   └── heartbeat/          # 爱心动画彩蛋组件 (搜索520/521触发)
+│
+├── data/
+│   └── staticData.js       # 城市列表 + 热门城市数据
+│
+└── img/                    # 图标资源 (~48张)
+    ├── weather.png / setting.png    # tabBar 图标 (81x81)
+    ├── qing.jpg / yu.jpg / ...      # 7张可选背景图
+    ├── lifestyle_*.png              # 14张生活指数图标
+    └── ...                          # 其他图标资源
 ```
 
-### 当前已知问题 (待修复)
-1. **右下角菜单按钮问题**: 点击主菜单按钮后弹出分享对话框而非展开菜单。
-   - **原因**: `.share` 元素内的 `<button open-type='share'>` (透明覆盖层) 与主菜单按钮位于同一初始位置 (`bottom:150rpx; right:70rpx`)，即使 opacity 为 0 也拦截了点击事件。
-   - **修复方向**: 已将主按钮 `.menus .main` z-index 提升到 103 (高于子按钮 102)。如仍有问题，可尝试给 `.menus .share button` 添加 `pointer-events: none` 并在菜单展开时恢复。
-   - **相关文件**: `pages/index/index.wxml` (菜单 share 结构)、`pages/index/index.wxss` (`.menus` 样式)
+## tabBar 底部导航
+- **首页**（weather.png 图标） → `pages/index/index`
+- **设置**（setting.png 图标） → `pages/setting/setting`
+- 选中高亮色 `#40a7e7`，未选中灰色 `#999`
 
-### 重构记录
-- 云开发代码已彻底删除 (cloudfunction/ 目录、所有注释代码)
-- `wx.getSystemInfo` 已替换为 `wx.getWindowInfo()` + `wx.getDeviceInfo()`
-- `open-data` 组件已替换为天气图标 + 更新时间
-- WXML 字段名全部使用 v7 格式 (temp/feelsLike/text/windDir 等)
-- 跨页面通信使用 events.js 事件总线
-- 背景图手动切换功能已修复 (setBcgImg 方法已补全)
-- 3 天预报已添加 (API + WXML)
+## 页面功能
 
----
+### 首页 (pages/index)
+- **数据加载**: `Promise.all` 并发请求4个API（实时/24h预报/3天预报/指数）
+- **城市显示**: 定位后通过 `lookupCity(坐标)` 反查中文城市名
+- **页面模块**:
+  1. **搜索栏** - 城市名搜索，带半透明背景 + text-shadow
+  2. **顶栏** - 头像 + "更新于 MM-dd hh:mm"
+  3. **当前天气** - 城市名(粗体+阴影) + 大字号温度 + 天气状况
+  4. **逐时预报** - 水平滚动时序卡片（时间→温度→天气→风力），紧凑间距
+  5. **3天预报** - 三列毛玻璃卡片（今天/明天/后天 + 温度渐变色条 + 天气 + 风力）
+  6. **生活指数** - 水平滚动（图标 + 名称 + 金色等级 + 描述文字）
+  7. **实时天气** - 网格12项详情（温度/体感/湿度/风向/风力/能见度等）
+- **背景**: 7张风景图可切换，自动根据当前天气匹配
+- **下拉刷新**: 带 `_loading` 防重入锁
+- **文字清晰度**: 所有主要文字带 `text-shadow` 投影，关键数据加粗
 
-## 一、项目概述
-本项目是一款基于微信小程序原生框架开发的轻量天气查询工具，无需微信云开发，全部气象数据通过和风天气开放 API获取；依靠微信原生定位接口、网络请求接口完成数据拉取与页面渲染，界面简洁轻量化，开箱即用，适合日常快速查看气象信息，同时也是学习微信小程序网络请求、定位授权、全局变量管理的实战项目。
+### 城市选择 (pages/citychoose)
+- 字母排序 A-Z 城市列表 + 输入搜索
+- "猜你想找" 区域（热门城市 + 定位入口）
+- 选中后 `events.emit('weatherRefresh', cityName)` 通知首页
 
-小程序首页
+### 设置 (pages/setting)
+- 隐藏搜索栏开关
+- 隐藏生活指数开关
+- 屏幕常亮 / 更新提醒
 
-![777777777mage](E:\图片\picture_Cache\777777777mage.jpeg)
+### 系统信息 (pages/systeminfo)
+- 设备型号/SDK版本/屏幕分辨率等
 
-预报页面
+## 数据流
 
-![77image](E:\图片\picture_Cache\77image.jpeg)
+```
+首页加载 → onLoad() → init()
+         → getLocation()
+         → api.lookupCity(坐标) → 拿到中文城市名
+         → loadWeather(location, cityName)
+         → Promise.all([getWeatherNow, getWeather24h, getWeather3d, getIndices])
+         → parse*() 解析 → setData() 渲染
 
-二、核心业务功能
+搜索 → commitSearch → api.lookupCity(val) → loadWeather(cityId, cityName)
 
-1. 自动定位，一键查询本地天气
-   打开小程序自动申请地理位置权限，调用微信wx.getLocation获取当前经纬度；
-     经纬度自动传入和风天气 API，无需手动输入城市，自动加载当前城市实时气象；
-     权限拒绝时弹窗提示用户开启定位，保障基础使用。
-2. 实时气象信息展示
-   首页核心区域直观展示当下完整实况天气：
-     当前实时温度、体感温度；
-     天气状况（晴 / 多云 / 小雨 / 雪等文字 + 配套天气图标）；
-     详细气象参数：空气湿度、风向、风力等级、能见度；
-     城市名称、区域定位信息。
-3. 24 小时逐小时天气预报
-   横向滚动卡片展示未来一整天每小时天气变化，可滑动查看早晚温差、降雨时段，提前规划出行。
-4. 多日天气预报（3 天 / 7 天）
-   和风免费 Key 默认支持 3 天预报，完成个人开发者认证后可获取 7 天完整预报；
-     展示每日最高温、最低温、白天 / 夜间天气状况，搭配天气图标直观区分。
-5. 下拉刷新实时更新气象
-   首页支持下拉手势刷新，重新调用和风 API 拉取最新天气数据，无需重启小程序即可更新气象信息。
-6. 屏幕常亮设置
-   内置保持屏幕常亮开关，开启后小程序前台运行时手机不会自动熄屏，适合长时间查看天气。
-     三、配套辅助功能
-     设备适配
-     自动识别 iPhone X 及以上带刘海机型，自动调整页面顶部边距，解决刘海遮挡界面问题，兼容绝大多数安卓、苹果手机。
-     无云开发轻量化运行
-     项目内置云开发兼容代码，可一键注释云初始化代码，完全脱离微信云服务运行，降低部署门槛，新手无需开通云开发即可调试。
-     全局统一接口管理
-     所有和风天气 API 地址、密钥统一存放于app.js全局变量，一处修改全局生效，便于更换和风 Key、调整接口地址，维护简单。
-     友好调试适配
-     支持开发者工具「不校验合法域名」模式，本地调试无需提前在小程序后台配置域名白名单，降低本地测试成本。
-     四、技术实现亮点（可选，用于课程作业）
-     采用微信原生 WXML+WXSS+JavaScript 开发，无第三方 UI 框架，代码体积小、加载速度快；
-     全局状态管理：通过globalData统一存储和风密钥、设备信息、接口地址；
-     模块化网络请求：统一封装和风 API 调用逻辑，减少重复代码；
-     设备信息自动获取：页面启动自动读取手机系统信息，做屏幕适配；
-     接口解耦：天气、小时预报接口地址分离，后期可单独替换 / 新增气象接口。
+下拉刷新 → onPullDownRefresh → init() → (同上)
 
+城市选择 → events.emit('weatherRefresh', name) → onWeatherRefresh → search/init
+```
 
+## 关键逻辑模块
 
+### services/weather.js
+- `parseNowWeather(nowData, fxLink, cityName)` — 优先使用传入的中文城市名，坐标/ID时从 fxLink 提取拼音兜底
+- `parseHourlyWeather(hourlyList)` — 解析24h预报
+- `parseDailyForecast(dailyList)` — 解析3天预报 + `getDayLabel()` 生成"今天/明天/后天"
+- `parseIndices(indicesList)` — 解析生活指数 + `lifestyleIconMap` 映射图标路径
+- `getBackgroundByWeather(weatherText)` — 根据天气文字匹配背景图
 
+### services/api.js
+- `request(url, data)` — 通用 Promise 封装，校验 `code === '200'`
+- `getWeatherNow` / `getWeather24h` / `getWeather3d` / `lookupCity` / `getIndices`
 
-剩余截图
+### pages/index/index.js 状态管理
+- `data` — 页面状态对象（weatherNow, hourlyDatas, dailyForecast, lifeIndices 等）
+- `_loading` — 下拉刷新防重入锁
+- `_onWeatherRefresh` / `_onSettingChanged` — 事件总线回调（箭头函数绑定 this）
 
-<div >
-    <img src='https://gitee.com/lwzhang1101/images/raw/master/img/weather3.png' style='style='max-width:100px!important;width:100px!important;'>
-    <img src='https://gitee.com/lwzhang1101/images/raw/master/img/weather4.png' style='style='max-width:100px!important;width:100px!important;'>
-</div>
+## 样式要点
+- 全局背景 `#f4f6f9`，内容区使用背景图铺满
+- 各数据模块背景使用半透明黑色 `rgba(0,0,0,.4~.6)` 叠加在背景图上
+- 三个核心模块（逐时/3天/指数）各有独立的背景透明度和卡片风格
+- 标题栏：26rpx 加粗 + 字间距 + 下划线分隔
+- 详情网格：标签 22rpx 半透明白，数值 26rpx 加粗纯白
 
-
+## 已知问题记录
+- 选择城市后返回首页自动刷新（通过 `onWeatherRefresh` 事件，已修复 this 作用域）

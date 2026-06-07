@@ -22,10 +22,12 @@ function getBackgroundByWeather(text) {
 
 function parseNowWeather(nowData, fxLink, location) {
   let loc = location
-  if (fxLink) {
-    let match = fxLink.match(/weather\/(.+?)-\d+/)
-    if (match) {
-      loc = match[1]
+  if (!loc || /^[\d.,]+$/.test(loc) || /^\d+$/.test(loc)) {
+    if (fxLink) {
+      let match = fxLink.match(/weather\/(.+?)-\d+/)
+      if (match) {
+        loc = match[1]
+      }
     }
   }
   let now = new Date()

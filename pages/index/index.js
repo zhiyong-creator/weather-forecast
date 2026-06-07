@@ -3,7 +3,6 @@ let api = require('../../services/api')
 let weatherService = require('../../services/weather')
 let events = require('../../utils/events')
 let globalData = getApp().globalData
-let SYSTEMINFO = globalData.systeminfo
 
 Page({
   data: {
@@ -31,11 +30,6 @@ Page({
       },
     },
     searchText: '',
-    hasPopped: false,
-    animationMain: {},
-    animationOne: {},
-    animationTwo: {},
-    animationFour: {},
     located: true,
     searchCity: '',
     setting: {},
@@ -60,13 +54,15 @@ Page({
 
   // ---- 生命周期 ----
   onLoad() {
-    events.on('weatherRefresh', this.onWeatherRefresh)
-    events.on('settingChanged', this.reloadInitSetting)
+    this._onWeatherRefresh = (name) => this.onWeatherRefresh(name)
+    this._onSettingChanged = () => this.reloadInitSetting()
+    events.on('weatherRefresh', this._onWeatherRefresh)
+    events.on('settingChanged', this._onSettingChanged)
     this.reloadPage()
   },
   onUnload() {
-    events.off('weatherRefresh', this.onWeatherRefresh)
-    events.off('settingChanged', this.reloadInitSetting)
+    events.off('weatherRefresh', this._onWeatherRefresh)
+    events.off('settingChanged', this._onSettingChanged)
   },
   onShow() {
     if (!utils.isEmptyObject(this.data.shareInfo)) {
@@ -112,7 +108,7 @@ Page({
   },
 
   // ---- 天气加载 ----
-  loadWeather(location) {
+  loadWeather(location, cityName) {
     wx.showLoading({ title: '加载中' })
     Promise.all([
       api.getWeatherNow(location).catch(function () { return null }),
@@ -129,7 +125,7 @@ Page({
       let updateData = {}
 
       if (nowData) {
-        let parsed = weatherService.parseNowWeather(nowData.now, nowData.fxLink, location)
+        let parsed = weatherService.parseNowWeather(nowData.now, nowData.fxLink, cityName || location)
         updateData.weatherNow = parsed
         let bg = weatherService.getBackgroundByWeather(parsed.text)
         updateData.bcgImg = bg.src
@@ -186,7 +182,13 @@ Page({
     this.setData({ located: true })
     wx.getLocation({
       success: (res) => {
-        this.loadWeather(res.longitude + ',' + res.latitude)
+        let coordinates = res.longitude + ',' + res.latitude
+        api.lookupCity(coordinates).then((data) => {
+          let cityName = data.location && data.location[0] && data.location[0].name
+          this.loadWeather(coordinates, cityName)
+        }).catch(() => {
+          this.loadWeather(coordinates)
+        })
       },
       fail: (res) => {
         let errMsg = (res && res.errMsg) || ''
@@ -237,7 +239,7 @@ Page({
       this.setData({ located: false })
       api.lookupCity(val).then((data) => {
         if (data.location && data.location.length > 0) {
-          this.loadWeather(data.location[0].id)
+          this.loadWeather(data.location[0].id, data.location[0].name)
         } else {
           wx.showToast({ title: '未找到该城市', icon: 'none' })
         }
@@ -352,79 +354,6 @@ Page({
     heartbeat.dance(() => {
       this.setData({ showHeartbeat: false, enableSearch: true })
       this.setData({ showHeartbeat: true })
-    })
-  },
-
-  // ---- 菜单 ----
-  menuHide() {
-    if (this.data.hasPopped) {
-      this.takeback()
-      this.setData({ hasPopped: false })
-    }
-  },
-  menuMain() {
-    if (!this.data.hasPopped) {
-      this.popp()
-      this.setData({ hasPopped: true })
-    } else {
-      this.takeback()
-      this.setData({ hasPopped: false })
-    }
-  },
-  menuMainMove(e) {
-    if (this.data.hasPopped) {
-      this.takeback()
-      this.setData({ hasPopped: false })
-    }
-    let windowWidth = SYSTEMINFO.windowWidth
-    let windowHeight = SYSTEMINFO.windowHeight
-    let touches = e.touches[0]
-    let clientX = touches.clientX
-    let clientY = touches.clientY
-    if (clientX > windowWidth - 40) clientX = windowWidth - 40
-    if (clientX <= 90) clientX = 90
-    if (clientY > windowHeight - 40 - 60) clientY = windowHeight - 40 - 60
-    if (clientY <= 60) clientY = 60
-    this.setData({ pos: { left: clientX, top: clientY } })
-  },
-  menuToCitychoose() {
-    this.menuMain()
-    wx.navigateTo({ url: '/pages/citychoose/citychoose' })
-  },
-  menuToSetting() {
-    this.menuMain()
-    wx.navigateTo({ url: '/pages/setting/setting' })
-  },
-  popp() {
-    let animationMain = wx.createAnimation({ duration: 200, timingFunction: 'ease-out' })
-    let animationOne = wx.createAnimation({ duration: 200, timingFunction: 'ease-out' })
-    let animationTwo = wx.createAnimation({ duration: 200, timingFunction: 'ease-out' })
-    let animationFour = wx.createAnimation({ duration: 200, timingFunction: 'ease-out' })
-    animationMain.rotateZ(180).step()
-    animationOne.translate(-30, -45).rotateZ(180).opacity(1).step()
-    animationTwo.translate(-75, 0).rotateZ(180).opacity(1).step()
-    animationFour.translate(-30, 45).rotateZ(180).opacity(1).step()
-    this.setData({
-      animationMain: animationMain.export(),
-      animationOne: animationOne.export(),
-      animationTwo: animationTwo.export(),
-      animationFour: animationFour.export(),
-    })
-  },
-  takeback() {
-    let animationMain = wx.createAnimation({ duration: 200, timingFunction: 'ease-out' })
-    let animationOne = wx.createAnimation({ duration: 200, timingFunction: 'ease-out' })
-    let animationTwo = wx.createAnimation({ duration: 200, timingFunction: 'ease-out' })
-    let animationFour = wx.createAnimation({ duration: 200, timingFunction: 'ease-out' })
-    animationMain.rotateZ(0).step()
-    animationOne.translate(0, 0).rotateZ(0).opacity(0).step()
-    animationTwo.translate(0, 0).rotateZ(0).opacity(0).step()
-    animationFour.translate(0, 0).rotateZ(0).opacity(0).step()
-    this.setData({
-      animationMain: animationMain.export(),
-      animationOne: animationOne.export(),
-      animationTwo: animationTwo.export(),
-      animationFour: animationFour.export(),
     })
   },
 })

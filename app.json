@@ -8,8 +8,8 @@
   "window": {
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#40a7e7",
-    "navigationBarTitleText": "Weather Forecast",
-    "navigationBarTextStyle": "white"
+    "navigationBarTitleText": "天气预报",
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
     "color": "#999",

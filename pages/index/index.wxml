@@ -1,4 +1,4 @@
-<view class="container {{isIPhoneX ? 'iphonex-padding' : ''}}" catchtap='menuHide'>
+<view class="container {{isIPhoneX ? 'iphonex-padding' : ''}}">
   <heartbeat id='heartbeat' wx:if='{{showHeartbeat}}'></heartbeat>
   <view class='bcg' wx:if='{{!bcgImg}}' style='background: {{bcgColor}}'></view>
   <image class='bcg' wx:if='{{bcgImg}}' src='{{bcgImg}}' mode='aspectFill'></image>
@@ -96,18 +96,3 @@
   </view>
 </view>
 
-<view class='menus' wx:if='{{!bcgImgAreaShow}}'>
-  <view class='menu' animation='{{animationOne}}' catchtap='menuToCitychoose'>
-    <image src='/img/city.png'></image>
-  </view>
-  <view class='menu' animation='{{animationTwo}}' catchtap='menuToSetting'>
-    <image src='/img/setting.png'></image>
-  </view>
-  <view class='share {{hasPopped ? "share-active" : ""}}' animation='{{animationFour}}'>
-    <image src='/img/share_circle.png'></image>
-    <button open-type='share'></button>
-  </view>
-  <view class='menu main' animation='{{animationMain}}' catchtap='menuMain' bindtouchmove='menuMainMove' style='left:{{pos.left}}px;top:{{pos.top}}px;'>
-    <image src='/img/menu.png'></image>
-  </view>
-</view>
