@@ -74,7 +74,9 @@ Page({
     }
   },
   onPullDownRefresh() {
-    this.reloadPage()
+    if (this._loading) return
+    this._loading = true
+    this.init()
   },
   onShareAppMessage() {
     let shareInfo = this.data.shareInfo
@@ -152,10 +154,12 @@ Page({
       }
 
       this.setData(updateData)
+      this._loading = false
     }).catch(() => {
       wx.hideLoading()
       wx.stopPullDownRefresh()
       wx.showToast({ title: '网络不给力，请稍后再试', icon: 'none' })
+      this._loading = false
     })
   },
 
@@ -198,6 +202,8 @@ Page({
   },
 
   handleLocationDenied() {
+    wx.stopPullDownRefresh()
+    this._loading = false
     wx.showToast({
       title: '需要开启地理位置权限',
       icon: 'none',

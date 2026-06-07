@@ -85,8 +85,8 @@
     <view class='title show-title'>实时天气</view>
     <view class='details'>
       <view class='detail' wx:for='{{detailsDic.key}}' wx:key='{{index}}'>
-        <view>{{detailsDic.val[item]}}</view>
-        <view>{{weatherNow[item]}}</view>
+        <view class='label'>{{detailsDic.val[item]}}</view>
+        <view class='value'>{{weatherNow[item]}}</view>
       </view>
     </view>
   </view>

@@ -11,6 +11,26 @@
     "navigationBarTitleText": "Weather Forecast",
     "navigationBarTextStyle": "white"
   },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#40a7e7",
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "img/weather.png",
+        "selectedIconPath": "img/weather.png"
+      },
+      {
+        "pagePath": "pages/setting/setting",
+        "text": "设置",
+        "iconPath": "img/setting.png",
+        "selectedIconPath": "img/setting.png"
+      }
+    ]
+  },
   "requiredPrivateInfos": [
     "getLocation"
   ],
