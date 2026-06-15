@@ -8,6 +8,7 @@ App({
     } catch (e) {
       this.globalData.systeminfo = {}
     }
+
   },
   globalData: {
     keepscreenon: false,

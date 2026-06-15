@@ -1,4 +1,27 @@
 <view class='setting'>
+  <!-- 账号 -->
+  <view class='t'>
+    <view class='title'>
+      <view>账号</view>
+    </view>
+    <view class='content'>
+      <block wx:if='{{userInfo}}'>
+        <view class='user-card'>
+          <button class='avatar-btn' open-type='chooseAvatar' bindchooseavatar='onChooseAvatar'>
+            <image class='user-avatar' src='{{userInfo.avatarUrl}}' mode='aspectFill'></image>
+          </button>
+          <input class='nickname-input' type='nickname' value='{{userInfo.nickName}}' bindinput='onNicknameInput' placeholder='点击设置昵称' />
+          <button class='logout-btn' size='mini' plain bindtap='onLogout'>退出</button>
+        </view>
+      </block>
+      <block wx:else>
+        <view class='item'>
+          <view>微信登录</view>
+          <button class='login-btn' bindtap='onGetUserInfo'>点击登录</button>
+        </view>
+      </block>
+    </view>
+  </view>
   <!-- 自定义 -->
   <view class='s'>
     <view class='t'>

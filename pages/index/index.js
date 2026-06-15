@@ -13,6 +13,7 @@ Page({
     lifeIndices: [],
     dailyForecast: [],
     weatherIconUrl: globalData.weatherIconUrl,
+    userInfo: null,
     detailsDic: {
       key: ['temp', 'feelsLike', 'humidity', 'precip', 'windDir', 'wind360', 'windScale', 'windSpeed', 'vis', 'pressure', 'cloud', ''],
       val: {
@@ -58,6 +59,10 @@ Page({
     this._onSettingChanged = () => this.reloadInitSetting()
     events.on('weatherRefresh', this._onWeatherRefresh)
     events.on('settingChanged', this._onSettingChanged)
+    let cachedUserInfo = wx.getStorageSync('userInfo')
+    if (cachedUserInfo) {
+      this.setData({ userInfo: cachedUserInfo })
+    }
     this.reloadPage()
   },
   onUnload() {
@@ -65,6 +70,10 @@ Page({
     events.off('settingChanged', this._onSettingChanged)
   },
   onShow() {
+    let cachedUserInfo = wx.getStorageSync('userInfo')
+    if (cachedUserInfo) {
+      this.setData({ userInfo: cachedUserInfo })
+    }
     if (!utils.isEmptyObject(this.data.shareInfo)) {
       return
     }

@@ -1,0 +1,136 @@
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, #40a7e7 0%, #2d7fc1 30%, #1a5a9e 60%, #0d3b6f 100%);
+  z-index: 0;
+}
+
+.login-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 200rpx;
+}
+
+.logo-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 100rpx;
+}
+
+.logo {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 40rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 8rpx 40rpx rgba(0, 0, 0, .3);
+}
+
+.app-name {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16rpx;
+  text-shadow: 0 2rpx 12rpx rgba(0, 0, 0, .3);
+}
+
+.app-desc {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, .8);
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, .2);
+}
+
+.features {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 40rpx;
+  width: 100%;
+  padding: 0 60rpx;
+  box-sizing: border-box;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, .12);
+  backdrop-filter: blur(10rpx);
+  border-radius: 20rpx;
+  padding: 30rpx 24rpx;
+  border: 1rpx solid rgba(255, 255, 255, .15);
+  flex: 1;
+}
+
+.feature-icon {
+  font-size: 48rpx;
+  margin-bottom: 12rpx;
+}
+
+.feature-text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, .9);
+  white-space: nowrap;
+}
+
+.login-bottom {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0 60rpx 120rpx;
+  box-sizing: border-box;
+}
+
+.login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 96rpx;
+  background: #07c160;
+  border-radius: 48rpx;
+  font-size: 32rpx;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(7, 193, 96, .4);
+}
+
+.login-btn::after {
+  border: none;
+}
+
+.login-btn[disabled] {
+  opacity: .6;
+}
+
+.wechat-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 16rpx;
+}
+
+.agreement {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, .5);
+}

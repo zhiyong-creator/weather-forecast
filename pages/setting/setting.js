@@ -9,6 +9,7 @@ Page({
     keepscreenon: false,
     SDKVersion: '',
     enableUpdate: true,
+    userInfo: null,
   },
   switchChange(e) {
     let dataset = e.currentTarget.dataset
@@ -50,15 +51,14 @@ Page({
     this.setData({ keepscreenon: getApp().globalData.keepscreenon })
     this.ifDisableUpdate()
     this.getScreenBrightness()
-    wx.getStorage({
-      key: 'setting',
-      success: (res) => {
-        this.setData({ setting: res.data })
-      },
-      fail: () => {
-        this.setData({ setting: {} })
-      },
-    })
+    let cachedSetting = wx.getStorageSync('setting')
+    if (cachedSetting) {
+      this.setData({ setting: cachedSetting })
+    }
+    let cachedUserInfo = wx.getStorageSync('userInfo')
+    if (cachedUserInfo) {
+      this.setData({ userInfo: cachedUserInfo })
+    }
   },
   ifDisableUpdate() {
     let systeminfo = getApp().globalData.systeminfo
@@ -127,6 +127,64 @@ Page({
   getsysteminfo() {
     wx.navigateTo({ url: '/pages/systeminfo/systeminfo' })
   },
+  // ---- 登录相关 ----
+  onGetUserInfo() {
+    wx.showLoading({ title: '登录中...' })
+    wx.login({
+      success: (res) => {
+        if (res.code) {
+          let userInfo = {
+            avatarUrl: '/img/weather.png',
+            nickName: '微信用户',
+          }
+          wx.setStorage({ key: 'userInfo', data: userInfo })
+          wx.setStorage({ key: 'loginCode', data: res.code })
+          this.setData({ userInfo: userInfo })
+          wx.hideLoading()
+          wx.showToast({ title: '登录成功', icon: 'success' })
+        } else {
+          wx.hideLoading()
+          wx.showToast({ title: '登录失败', icon: 'none' })
+        }
+      },
+      fail: () => {
+        wx.hideLoading()
+        wx.showToast({ title: '网络异常', icon: 'none' })
+      },
+    })
+  },
+  onChooseAvatar(e) {
+    let avatarUrl = e.detail.avatarUrl
+    let userInfo = wx.getStorageSync('userInfo') || { nickName: '微信用户' }
+    userInfo.avatarUrl = avatarUrl
+    wx.setStorage({ key: 'userInfo', data: userInfo })
+    this.setData({ userInfo: userInfo })
+  },
+  onNicknameInput(e) {
+    let nickName = e.detail.value
+    let userInfo = wx.getStorageSync('userInfo') || { avatarUrl: '/img/weather.png' }
+    userInfo.nickName = nickName
+    wx.setStorage({ key: 'userInfo', data: userInfo })
+    this.setData({ userInfo: userInfo })
+  },
+  onLogout() {
+    wx.showModal({
+      title: '提示',
+      content: '确认退出登录？退出后需重新登录',
+      success: (res) => {
+        if (res.confirm) {
+          wx.removeStorage({ key: 'userInfo' })
+          wx.removeStorage({ key: 'loginCode' })
+          this.setData({ userInfo: null })
+          wx.showToast({ title: '已退出登录', icon: 'success' })
+          setTimeout(() => {
+            wx.reLaunch({ url: '/pages/login/login' })
+          }, 1500)
+        }
+      },
+    })
+  },
+
   removeStorage(e) {
     let that = this
     let datatype = e.currentTarget.dataset.type
@@ -160,7 +218,7 @@ Page({
             wx.clearStorage({
               success: function () {
                 wx.showToast({ title: '数据已清除' })
-                that.setData({ setting: {}, pos: {} })
+                that.setData({ setting: {}, pos: {}, userInfo: null })
                 events.emit('settingChanged')
               },
             })

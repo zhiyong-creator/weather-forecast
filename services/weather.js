@@ -10,6 +10,7 @@ let bgMap = {
 }
 let defaultBg = { src: '/img/bg5.jpg', topColor: '#b8bab9' }
 
+/*背景图匹配*/
 function getBackgroundByWeather(text) {
   if (!text) return defaultBg
   for (let keyword in bgMap) {
@@ -20,6 +21,7 @@ function getBackgroundByWeather(text) {
   return defaultBg
 }
 
+/*实时天气*/
 function parseNowWeather(nowData, fxLink, location) {
   let loc = location
   if (!loc || /^[\d.,]+$/.test(loc) || /^\d+$/.test(loc)) {
@@ -50,7 +52,7 @@ function parseNowWeather(nowData, fxLink, location) {
     updateTimeFormat: utils.formatDate(now, 'MM-dd hh:mm'),
   }
 }
-
+/*24小时预报*/
 function parseHourlyWeather(hourlyList) {
   return (hourlyList || []).map(function (item) {
     var time = ''
@@ -82,6 +84,7 @@ function getDayLabel(dateStr) {
   return dateStr.slice(5)
 }
 
+/*3天预报*/
 function parseDailyForecast(dailyList) {
   return (dailyList || []).map(function (item) {
     return {
@@ -109,6 +112,7 @@ var lifestyleIconMap = {
   '9': 'flu',
 }
 
+/*生活指数*/
 function parseIndices(indicesList) {
   return (indicesList || []).map(function (item) {
     var iconName = lifestyleIconMap[item.type] || ''

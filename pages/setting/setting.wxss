@@ -95,6 +95,63 @@
   display: block;
   margin-bottom: 10rpx;
 }
+.avatar-btn {
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  min-width: auto;
+  min-height: auto;
+}
+.avatar-btn::after {
+  border: none;
+}
+.nickname-input {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+  height: 72rpx;
+  padding: 0 16rpx;
+  border-bottom: 2rpx solid #eee;
+}
+.user-card {
+  display: flex;
+  align-items: center;
+  height: 100rpx;
+}
+.user-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+.user-name {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+}
+.logout-btn {
+  font-size: 24rpx;
+  color: #999;
+  border-color: #ddd;
+  line-height: 1.8;
+  padding: 4rpx 20rpx;
+}
+.login-btn {
+  font-size: 26rpx;
+  color: #fff;
+  background: #40a7e7;
+  border: none;
+  line-height: 2;
+  padding: 0 24rpx;
+  border-radius: 8rpx;
+}
+.login-btn::after {
+  border: none;
+}
 .wx-switch-input{width:84rpx !important;height:43rpx !important;}
 .wx-switch-input::before{width:82rpx !important;height: 38rpx !important;}
 .wx-switch-input::after{width: 38rpx !important;height: 38rpx !important;}

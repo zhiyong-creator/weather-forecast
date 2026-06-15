@@ -1,0 +1,39 @@
+<view class="login-page">
+  <view class="login-bg"></view>
+
+  <view class="login-content">
+    <view class="logo-area">
+      <image class="logo" src="/img/weather.png" mode="aspectFill"></image>
+      <view class="app-name">天气预报</view>
+      <view class="app-desc">精准天气，随时随地</view>
+    </view>
+
+    <view class="features">
+      <view class="feature-item">
+        <view class="feature-icon">🌤</view>
+        <view class="feature-text">实时天气信息</view>
+      </view>
+      <view class="feature-item">
+        <view class="feature-icon">📅</view>
+        <view class="feature-text">3天逐时预报</view>
+      </view>
+      <view class="feature-item">
+        <view class="feature-icon">📋</view>
+        <view class="feature-text">生活指数参考</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="login-bottom">
+    <button
+      class="login-btn"
+      bindtap="onLoginTap"
+      disabled="{{!canLogin}}"
+      loading="{{!canLogin}}"
+    >
+      <image class="wechat-icon" src="/img/wechat.png" mode="aspectFill"></image>
+      微信一键登录
+    </button>
+    <view class="agreement">登录即表示同意使用条款</view>
+  </view>
+</view>

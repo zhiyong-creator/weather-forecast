@@ -23,8 +23,9 @@
   </view>
   <view class='content' wx:if='{{!bcgImgAreaShow}}' style='margin-top: {{setting.hiddenSearch ? 20 : 60}}px'>
     <view class='avatarInfo' catchtap='showBcgImgArea'>
-      <image class='avatar' src='/img/weather.png'></image>
-      <view class='name' wx:if='{{weatherNow.updateTimeFormat}}'>更新于 {{weatherNow.updateTimeFormat}}</view>
+      <image class='avatar' src='{{userInfo.avatarUrl || "/img/weather.png"}}' mode='aspectFill'></image>
+      <view class='name'>{{userInfo.nickName || ""}}<text wx:if='{{weatherNow.updateTimeFormat}}'> 更新于 {{weatherNow.updateTimeFormat}}</text></view>
+    <text>更换背景</text>
     </view>
     
     
